@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - CpechDev</title>
+    @*<script src="~/Scripts/WIRISplugins.js?viewer=image"></script>*@
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryval")
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand text-white" href="@Url.Action("index","Home")">
+            Dev Cpech
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    @*<a class="nav-link" href="@Url.Action("index","Pruebas")">Pruebas Disponibles</a>*@
+                </li>
+            </ul>
+            <span class="nav navbar-text text-white pull-right">
+
+                <a class="btn text-white" onclick="javascript: Salir()">
+                    Salir
+                    <i class="fa fa-sign-out navbar-text text-white" title="Salir del sistema"></i>
+                </a>
+            </span>
+        </div>
+    </nav>
+    <div class="container body-content">
+        <hr />
+        <br />
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - DESARROLLO Cpech </p>
+        </footer>
+    </div>
+    <div class="modal fade" id="Modal_sm" tabindex="-1" role="dialog" aria-labelledby="Ejemplo" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="height:auto">
+                <div id="Content_Modal_sm"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="Modal_sm" tabindex="-1" role="dialog" aria-labelledby="Ejemplo" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content" style="height:auto">
+                <div id="Content_Modal_xl"></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+@RenderSection("scripts", required: false)
+<script type="text/javascript">
+        function Salir() {
+            location.href = '@Url.Action("LogOff","Login")';
+    }
+</script>

@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AlumnosModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="CAP_Modalidades">
+    <Key>
+      <PropertyRef Name="ID_modalidad" />
+    </Key>
+    <Property Name="ID_modalidad" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre_modalidad" Type="varchar" MaxLength="50" />
+    <Property Name="Descripcion" Type="varchar" MaxLength="200" />
+    <Property Name="fecha_registro" Type="datetime" />
+    <Property Name="urlfoto" Type="varchar" MaxLength="150" />
+  </EntityType>
+  <EntityType Name="CAP_Programas_Matricula">
+    <Key>
+      <PropertyRef Name="Id_programa" />
+    </Key>
+    <Property Name="Id_programa" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre_programa" Type="varchar" MaxLength="100" />
+    <Property Name="Id_Modalidad" Type="int" />
+    <Property Name="Id_tipo_programa" Type="int" />
+    <Property Name="Id_tipo_programa_materiales_wired" Type="int" />
+    <Property Name="Cantidad_modulos" Type="int" />
+    <Property Name="Sincronico" Type="int" />
+    <Property Name="Cantidad_alumnos_sala" Type="int" />
+    <Property Name="Descripcion" Type="varchar" MaxLength="2000" />
+    <Property Name="URL_ficha_Descriptiva" Type="varchar" MaxLength="50" />
+    <Property Name="Fecha_registro" Type="datetime" />
+    <Property Name="Num_pagina" Type="int" />
+    <Property Name="Orden" Type="int" />
+    <Property Name="Programa" Type="int" />
+  </EntityType>
+  <EntityType Name="CAP_Tipo_Programa">
+    <Key>
+      <PropertyRef Name="Id_tipo_prog" />
+    </Key>
+    <Property Name="Id_tipo_prog" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Descripcion" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Comunas">
+    <Key>
+      <PropertyRef Name="IdComuna" />
+    </Key>
+    <Property Name="IdComuna" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NombreComuna" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Personas">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="varchar" MaxLength="50" />
+    <Property Name="Apellido" Type="varchar" MaxLength="50" />
+    <Property Name="Email" Type="varchar" MaxLength="50" />
+    <Property Name="IdComuna" Type="int" />
+  </EntityType>
+  <Association Name="FK_CAP_Programas_Matricula_CAP_Tipo_Programa">
+    <End Role="CAP_Tipo_Programa" Type="Self.CAP_Tipo_Programa" Multiplicity="0..1" />
+    <End Role="CAP_Programas_Matricula" Type="Self.CAP_Programas_Matricula" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAP_Tipo_Programa">
+        <PropertyRef Name="Id_tipo_prog" />
+      </Principal>
+      <Dependent Role="CAP_Programas_Matricula">
+        <PropertyRef Name="Id_tipo_programa" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AlumnosModelStoreContainer">
+    <EntitySet Name="CAP_Modalidades" EntityType="Self.CAP_Modalidades" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CAP_Programas_Matricula" EntityType="Self.CAP_Programas_Matricula" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CAP_Tipo_Programa" EntityType="Self.CAP_Tipo_Programa" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Comunas" EntityType="Self.Comunas" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Personas" EntityType="Self.Personas" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_CAP_Programas_Matricula_CAP_Tipo_Programa" Association="Self.FK_CAP_Programas_Matricula_CAP_Tipo_Programa">
+      <End Role="CAP_Tipo_Programa" EntitySet="CAP_Tipo_Programa" />
+      <End Role="CAP_Programas_Matricula" EntitySet="CAP_Programas_Matricula" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

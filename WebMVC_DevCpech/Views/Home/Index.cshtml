@@ -1,0 +1,63 @@
+﻿@model IEnumerable<WebMVC_DevCpech.ContextDB.Personas>
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="container">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Editar</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Nombre</td>
+                <td>@item.Apellido</td>
+                <td>@item.Email</td>
+                <td>
+                    <a class="btn btn-success" href="@Url.Action("EditarNewPage" , "home" , new { id = item.Id })"><i class="fa fa-window-maximize"></i> Editar new target</a>
+                    <a class="btn btn-warning" href="javascript:AbrirModal('@item.Id')"><i class="fa fa-edit"></i> Editar Modal</a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div class="modal fade" id="Modal_xl" tabindex="-1" role="dialog" aria-labelledby="Ejemplo" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content" style="height:auto">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal de Edición</h5>
+                <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="max-height: calc(100vh - 250px);
+    overflow-y: auto;">
+                <div id="Content_Modal_xl"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        function AbrirModal(id) {
+            var json = { id };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("EditarModal")',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(json),
+                success: function (data) {
+                    $("#Content_Modal_xl").html(data);
+                    $("#Modal_xl").modal({});
+                }
+            });
+        }
+    </script>
+
+}

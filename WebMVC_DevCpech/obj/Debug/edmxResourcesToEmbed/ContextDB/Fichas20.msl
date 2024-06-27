@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="AlumnosModelStoreContainer" CdmEntityContainer="AlumnosEntities">
+    <EntitySetMapping Name="Comunas">
+      <EntityTypeMapping TypeName="AlumnosModel.Comunas">
+        <MappingFragment StoreEntitySet="Comunas">
+          <ScalarProperty Name="IdComuna" ColumnName="IdComuna" />
+          <ScalarProperty Name="NombreComuna" ColumnName="NombreComuna" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Personas">
+      <EntityTypeMapping TypeName="AlumnosModel.Personas">
+        <MappingFragment StoreEntitySet="Personas">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Apellido" ColumnName="Apellido" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="IdComuna" ColumnName="IdComuna" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CAP_Modalidades">
+      <EntityTypeMapping TypeName="AlumnosModel.CAP_Modalidades">
+        <MappingFragment StoreEntitySet="CAP_Modalidades">
+          <ScalarProperty Name="urlfoto" ColumnName="urlfoto" />
+          <ScalarProperty Name="fecha_registro" ColumnName="fecha_registro" />
+          <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+          <ScalarProperty Name="Nombre_modalidad" ColumnName="Nombre_modalidad" />
+          <ScalarProperty Name="ID_modalidad" ColumnName="ID_modalidad" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CAP_Programas_Matricula">
+      <EntityTypeMapping TypeName="AlumnosModel.CAP_Programas_Matricula">
+        <MappingFragment StoreEntitySet="CAP_Programas_Matricula">
+          <ScalarProperty Name="Programa" ColumnName="Programa" />
+          <ScalarProperty Name="Orden" ColumnName="Orden" />
+          <ScalarProperty Name="Num_pagina" ColumnName="Num_pagina" />
+          <ScalarProperty Name="Fecha_registro" ColumnName="Fecha_registro" />
+          <ScalarProperty Name="URL_ficha_Descriptiva" ColumnName="URL_ficha_Descriptiva" />
+          <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+          <ScalarProperty Name="Cantidad_alumnos_sala" ColumnName="Cantidad_alumnos_sala" />
+          <ScalarProperty Name="Sincronico" ColumnName="Sincronico" />
+          <ScalarProperty Name="Cantidad_modulos" ColumnName="Cantidad_modulos" />
+          <ScalarProperty Name="Id_tipo_programa_materiales_wired" ColumnName="Id_tipo_programa_materiales_wired" />
+          <ScalarProperty Name="Id_tipo_programa" ColumnName="Id_tipo_programa" />
+          <ScalarProperty Name="Id_Modalidad" ColumnName="Id_Modalidad" />
+          <ScalarProperty Name="Nombre_programa" ColumnName="Nombre_programa" />
+          <ScalarProperty Name="Id_programa" ColumnName="Id_programa" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CAP_Tipo_Programa">
+      <EntityTypeMapping TypeName="AlumnosModel.CAP_Tipo_Programa">
+        <MappingFragment StoreEntitySet="CAP_Tipo_Programa">
+          <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+          <ScalarProperty Name="Id_tipo_prog" ColumnName="Id_tipo_prog" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

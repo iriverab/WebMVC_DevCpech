@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AlumnosModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Comunas">
+    <Key>
+      <PropertyRef Name="IdComuna" />
+    </Key>
+    <Property Name="IdComuna" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NombreComuna" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Personas">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Apellido" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="IdComuna" Type="Int32" />
+  </EntityType>
+  <EntityContainer Name="AlumnosEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Comunas" EntityType="Self.Comunas" />
+    <EntitySet Name="Personas" EntityType="Self.Personas" />
+    <EntitySet Name="CAP_Modalidades" EntityType="AlumnosModel.CAP_Modalidades" />
+    <EntitySet Name="CAP_Programas_Matricula" EntityType="AlumnosModel.CAP_Programas_Matricula" />
+    <EntitySet Name="CAP_Tipo_Programa" EntityType="AlumnosModel.CAP_Tipo_Programa" />
+    <AssociationSet Name="FK_CAP_Programas_Matricula_CAP_Tipo_Programa" Association="AlumnosModel.FK_CAP_Programas_Matricula_CAP_Tipo_Programa">
+      <End Role="CAP_Tipo_Programa" EntitySet="CAP_Tipo_Programa" />
+      <End Role="CAP_Programas_Matricula" EntitySet="CAP_Programas_Matricula" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="CAP_Modalidades">
+    <Key>
+      <PropertyRef Name="ID_modalidad" />
+    </Key>
+    <Property Name="ID_modalidad" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nombre_modalidad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="fecha_registro" Type="DateTime" Precision="3" />
+    <Property Name="urlfoto" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="CAP_Programas_Matricula">
+    <Key>
+      <PropertyRef Name="Id_programa" />
+    </Key>
+    <Property Name="Id_programa" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nombre_programa" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Id_Modalidad" Type="Int32" />
+    <Property Name="Id_tipo_programa" Type="Int32" />
+    <Property Name="Id_tipo_programa_materiales_wired" Type="Int32" />
+    <Property Name="Cantidad_modulos" Type="Int32" />
+    <Property Name="Sincronico" Type="Int32" />
+    <Property Name="Cantidad_alumnos_sala" Type="Int32" />
+    <Property Name="Descripcion" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+    <Property Name="URL_ficha_Descriptiva" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Fecha_registro" Type="DateTime" Precision="3" />
+    <Property Name="Num_pagina" Type="Int32" />
+    <Property Name="Orden" Type="Int32" />
+    <Property Name="Programa" Type="Int32" />
+    <NavigationProperty Name="CAP_Tipo_Programa" Relationship="AlumnosModel.FK_CAP_Programas_Matricula_CAP_Tipo_Programa" FromRole="CAP_Programas_Matricula" ToRole="CAP_Tipo_Programa" />
+  </EntityType>
+  <EntityType Name="CAP_Tipo_Programa">
+    <Key>
+      <PropertyRef Name="Id_tipo_prog" />
+    </Key>
+    <Property Name="Id_tipo_prog" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="CAP_Programas_Matricula" Relationship="AlumnosModel.FK_CAP_Programas_Matricula_CAP_Tipo_Programa" FromRole="CAP_Tipo_Programa" ToRole="CAP_Programas_Matricula" />
+  </EntityType>
+  <Association Name="FK_CAP_Programas_Matricula_CAP_Tipo_Programa">
+    <End Type="AlumnosModel.CAP_Tipo_Programa" Role="CAP_Tipo_Programa" Multiplicity="0..1" />
+    <End Type="AlumnosModel.CAP_Programas_Matricula" Role="CAP_Programas_Matricula" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAP_Tipo_Programa">
+        <PropertyRef Name="Id_tipo_prog" />
+      </Principal>
+      <Dependent Role="CAP_Programas_Matricula">
+        <PropertyRef Name="Id_tipo_programa" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
