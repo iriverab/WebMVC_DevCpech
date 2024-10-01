@@ -41,6 +41,12 @@ namespace WebMVC_DevCpech.Controllers
         public ActionResult EditarNewPage(int id)
         {
             var objPersona = _PersonasRepo.getPersonaById(id);
+            if (objPersona == null)
+            {
+                objPersona = new Personas();
+                objPersona.IdComuna = 0;
+                objPersona.Id = 0;
+            }
             ViewBag.IdComuna = new SelectList(_PersonasRepo.getComunas(), "IdComuna", "NombreComuna", objPersona.IdComuna);
             return View(objPersona); //pasamos modelo de ppersonas a la vista
         }
@@ -56,6 +62,12 @@ namespace WebMVC_DevCpech.Controllers
         public ActionResult EditarModal(int id)
         {
             var objPersona = _PersonasRepo.getPersonaById(id);
+            if (objPersona == null)
+            {
+                objPersona = new Personas();
+                objPersona.IdComuna = 0;
+                objPersona.Id = 0;
+            }
             ViewBag.IdComuna = new SelectList(_PersonasRepo.getComunas(), "IdComuna", "NombreComuna", objPersona.IdComuna);
             return PartialView(objPersona);
         }
@@ -63,11 +75,32 @@ namespace WebMVC_DevCpech.Controllers
         [HttpPost]
         public JsonResult EditarDesdeModal(Personas model)
         {
-            var salida = _PersonasRepo.GrabarPersona(model);
-            if (salida == 1)
-                return Json("OK");
-            else
-                return Json("ERROR");
+            try
+            {
+                if (string.IsNullOrEmpty(model.Nombre))
+                    throw new ArgumentException("Debes ingresar el nombre!");
+                if (string.IsNullOrEmpty(model.Apellido))
+                    throw new ArgumentException("Debes ingresar el Apellido!");
+                if (string.IsNullOrEmpty(model.Email))
+                    throw new ArgumentException("Debes ingresar el Email!");
+                if (model.IdComuna == null)
+                    throw new ArgumentException("Debes ingresar el Comuna!");
+                var salida = _PersonasRepo.GrabarPersona(model);
+                if (salida == 1)
+                    return Json("OK");
+                else
+                    return Json("ERROR");
+            }
+            catch (Exception ex)
+            {
+                return Json("Error " + ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult Eliminar(int id)
+        {
+            return Json(_PersonasRepo.EliminarById(id));
         }
     }
 }

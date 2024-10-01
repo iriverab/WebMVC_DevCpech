@@ -17,21 +17,39 @@ namespace WebMVC_DevCpech.Repository
             _db = new AlumnosEntities();
         }
 
+        /// <summary>
+        /// Obtenemos Todas las personas de la tabla
+        /// </summary>
+        /// <returns>Listado de personas</returns>
         public List<Personas> getPersonas()
         {
             return _db.Personas.ToList();
         }
 
+        /// <summary>
+        /// Obtenemos la persona por el id persona 
+        /// </summary>
+        /// <param name="id">Valor entero con el id de la persona</param>
+        /// <returns>objeto persona con todos sus campos</returns>
         internal Personas getPersonaById(int id)
         {
             return _db.Personas.Find(id);
         }
 
+        /// <summary>
+        /// Obtenemos todas las comunas
+        /// </summary>
+        /// <returns>Listado de comunas</returns>
         internal IEnumerable getComunas()
         {
             return _db.Comunas.ToList();
         }
 
+        /// <summary>
+        /// Metodo que permite grabar los datos enviados a la base de datos
+        /// </summary>
+        /// <param name="model">Se envia modelo Persona</param>
+        /// <returns>entero con 1 OK y 0 ERROR </returns>
         internal int GrabarPersona(Personas model)
         {
             try
@@ -54,6 +72,26 @@ namespace WebMVC_DevCpech.Repository
             catch (Exception)
             {
                 return 0;
+            }
+        }
+
+        /// <summary>
+        /// Metodo que permite eliminar un registro
+        /// </summary>
+        /// <param name="id">id entero de tabla persona</param>
+        /// <returns>un OK o ERROR {{Detalle}}</returns>
+        internal string EliminarById(int id)
+        {
+            try
+            {
+                var obj = _db.Personas.Find(id);
+                _db.Personas.Remove(obj);
+                _db.SaveChanges();
+                return "OK";
+            }
+            catch (Exception ex)
+            {
+                return "ERROR :" + ex.Message;
             }
         }
     }

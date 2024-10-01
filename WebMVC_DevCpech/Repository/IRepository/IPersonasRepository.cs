@@ -9,5 +9,6 @@ namespace WebMVC_DevCpech.Repository.IRepository
     public interface IPersonasRepository
     {
         List<ContextDB.Personas> getPersonas();
+
     }
 }
