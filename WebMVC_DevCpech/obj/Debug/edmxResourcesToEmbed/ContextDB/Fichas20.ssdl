@@ -36,6 +36,13 @@
     <Property Name="Id_tipo_prog" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Descripcion" Type="varchar" MaxLength="50" />
   </EntityType>
+  <EntityType Name="CentroDeCostos">
+    <Key>
+      <PropertyRef Name="codigo" />
+    </Key>
+    <Property Name="codigo" Type="char" MaxLength="3" Nullable="false" />
+    <Property Name="descripcion" Type="char" MaxLength="80" />
+  </EntityType>
   <EntityType Name="Comunas">
     <Key>
       <PropertyRef Name="IdComuna" />
@@ -69,6 +76,7 @@
     <EntitySet Name="CAP_Modalidades" EntityType="Self.CAP_Modalidades" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="CAP_Programas_Matricula" EntityType="Self.CAP_Programas_Matricula" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="CAP_Tipo_Programa" EntityType="Self.CAP_Tipo_Programa" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CentroDeCostos" EntityType="Self.CentroDeCostos" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Comunas" EntityType="Self.Comunas" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Personas" EntityType="Self.Personas" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_CAP_Programas_Matricula_CAP_Tipo_Programa" Association="Self.FK_CAP_Programas_Matricula_CAP_Tipo_Programa">

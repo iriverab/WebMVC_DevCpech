@@ -27,6 +27,7 @@
       <End Role="CAP_Tipo_Programa" EntitySet="CAP_Tipo_Programa" />
       <End Role="CAP_Programas_Matricula" EntitySet="CAP_Programas_Matricula" />
     </AssociationSet>
+    <EntitySet Name="CentroDeCostos" EntityType="AlumnosModel.CentroDeCostos" />
   </EntityContainer>
   <EntityType Name="CAP_Modalidades">
     <Key>
@@ -78,4 +79,11 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="CentroDeCostos">
+    <Key>
+      <PropertyRef Name="codigo" />
+    </Key>
+    <Property Name="codigo" Type="String" Nullable="false" MaxLength="3" FixedLength="true" Unicode="false" />
+    <Property Name="descripcion" Type="String" MaxLength="80" FixedLength="true" Unicode="false" />
+  </EntityType>
 </Schema>

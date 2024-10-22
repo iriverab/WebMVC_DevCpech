@@ -30,5 +30,6 @@ namespace WebMVC_DevCpech.ContextDB
         public virtual DbSet<CAP_Modalidades> CAP_Modalidades { get; set; }
         public virtual DbSet<CAP_Programas_Matricula> CAP_Programas_Matricula { get; set; }
         public virtual DbSet<CAP_Tipo_Programa> CAP_Tipo_Programa { get; set; }
+        public virtual DbSet<CentroDeCostos> CentroDeCostos { get; set; }
     }
 }

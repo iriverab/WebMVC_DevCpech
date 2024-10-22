@@ -11,6 +11,7 @@
         <EntityTypeShape EntityType="AlumnosModel.CAP_Programas_Matricula" Width="1.5" PointX="3" PointY="4" />
         <EntityTypeShape EntityType="AlumnosModel.CAP_Tipo_Programa" Width="1.5" PointX="0.75" PointY="5.125" />
         <AssociationConnector Association="AlumnosModel.FK_CAP_Programas_Matricula_CAP_Tipo_Programa" />
+        <EntityTypeShape EntityType="AlumnosModel.CentroDeCostos" Width="1.5" PointX="5.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

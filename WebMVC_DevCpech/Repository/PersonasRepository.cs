@@ -9,7 +9,7 @@ using WebMVC_DevCpech.Repository.IRepository;
 
 namespace WebMVC_DevCpech.Repository
 {
-    public class PersonasRepository : IPersonasRepository
+    public class PersonasRepository 
     {
         private static AlumnosEntities _db;
         public PersonasRepository()
@@ -43,6 +43,11 @@ namespace WebMVC_DevCpech.Repository
         internal IEnumerable getComunas()
         {
             return _db.Comunas.ToList();
+        }
+
+        internal IEnumerable getCentroCostosAll()
+        {
+            return _db.CentroDeCostos.ToList();
         }
 
         /// <summary>

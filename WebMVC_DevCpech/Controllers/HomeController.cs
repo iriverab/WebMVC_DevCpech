@@ -21,6 +21,7 @@ namespace WebMVC_DevCpech.Controllers
         public ActionResult Index()
         {
             var data = _PersonasRepo.getPersonas();
+            //var dataCC = _PersonasRepo.getCentroCostosAll();
             return View(data);
         }
 

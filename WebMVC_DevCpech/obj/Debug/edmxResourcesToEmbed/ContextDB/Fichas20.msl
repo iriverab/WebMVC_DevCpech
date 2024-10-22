@@ -59,5 +59,13 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="CentroDeCostos">
+      <EntityTypeMapping TypeName="AlumnosModel.CentroDeCostos">
+        <MappingFragment StoreEntitySet="CentroDeCostos">
+          <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+          <ScalarProperty Name="codigo" ColumnName="codigo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>
