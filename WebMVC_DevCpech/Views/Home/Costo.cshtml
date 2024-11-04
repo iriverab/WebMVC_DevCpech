@@ -1,0 +1,62 @@
+﻿@model IEnumerable<WebMVC_DevCpech.ContextDB.CentroDeCostos>
+
+@{
+    ViewBag.Title = "Listado";
+}
+<h3>Listado</h3>
+<div class="clearfix">
+    <a href="@Url.Action("EditarCosto" , "home" , new { id = 0 })" class="btn btn-success btn-sm pull-right"><i class="fa fa-plus"></i>Agregar</a>
+    <a href="javascript:AbrirModal('0')" class="btn btn-info btn-sm pull-right"><i class="fa fa-modx"></i>Agregar Modal Costo</a>
+</div>
+<div class="container">
+    @if (Model.Count() != 0)
+    {
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Descripcion</th>
+                    <th>Editar</th>
+                </tr>
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tr id="@item.codigo">
+                    <td>@item.descripcion</td>
+
+                    <td style="white-space:nowrap;width:1%">
+                        <input type="hidden" id="Nombre_@item.codigo" value="@(string.Format("{0} {1}" , item.descripcion))" />
+                        <a class="btn btn-success" href="@Url.Action("EditarCosto", "costo", new { codigo = item.codigo })"><i class="fa fa-window-maximize"></i> Editar new target</a>
+                        <a class="btn btn-warning" href="javascript:AbrirModal('@item.codigo')"><i class="fa fa-edit"></i> Editar Modal</a>
+                        <a class="btn btn-danger" href="javascript:Eliminar(@item.codigo)"><i class="fa fa-remove"></i> Delete</a>
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-success">
+            <p>No se encontró información</p>
+        </div>
+    }
+</div>
+<div class="modal fade" id="Modal_xl" tabindex="-1" role="dialog" aria-labelledby="Ejemplo" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content" style="height:auto">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal de Edición</h5>
+                <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="max-height: calc(100vh - 250px);
+    overflow-y: auto;">
+                <div id="Content_Modal_xl"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+}
