@@ -24,35 +24,24 @@ namespace WebMVC_DevCpech.Controllers
             return View(data);
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-            return View();
-        }
-
         public ActionResult EditarCosto(int Codigo)
         {
             var objCentroDeCostos = _centroDeCostoRepo.getCentroDeCostosById(Codigo);
             if (objCentroDeCostos == null)
             {
                 objCentroDeCostos = new CentroDeCostos();
-                objCentroDeCostos.codigo = "0";
+                objCentroDeCostos.codigo = 0;
             }
             ViewBag.codigo = new SelectList(_centroDeCostoRepo.getdescripcion(), "Codigo", "Descripcion", objCentroDeCostos.codigo);
             return PartialView(objCentroDeCostos);
         }
 
         [HttpPost]
+
         public ActionResult EditarCosto(CentroDeCostos model)
         {
-            var salida = _centroDeCostoRepo.GrabarCentroDeCostos(model);
-            return RedirectToAction("Costo", "home"); 
+            var Salida = _centroDeCostoRepo.GrabarCentroDeCostos(model);
+            return RedirectToAction("index", "costo");
         }
 
         [HttpPost]
@@ -60,17 +49,17 @@ namespace WebMVC_DevCpech.Controllers
         public ActionResult EditarModalC(int codigo)
         {
             var objCentroDeCostos = _centroDeCostoRepo.getCentroDeCostosById(codigo);
-            if(objCentroDeCostos == null)
+            if (objCentroDeCostos == null)
             {
                 objCentroDeCostos = new CentroDeCostos();
-                objCentroDeCostos.codigo = "0"; 
+                objCentroDeCostos.codigo = 0;
             }
             ViewBag.codigo = new SelectList(_centroDeCostoRepo.getdescripcion(), "descripcion", objCentroDeCostos.descripcion);
             return PartialView(objCentroDeCostos);
         }
 
         [HttpPost]
-        public JsonResult EditarDesdeModalC (CentroDeCostos model)
+        public JsonResult EditarDesdeModalC(CentroDeCostos model)
         {
             try
             {
@@ -93,5 +82,5 @@ namespace WebMVC_DevCpech.Controllers
         {
             return Json(_centroDeCostoRepo.EliminarBycodigo(codigo));
         }
-    } 
+    }
 }
