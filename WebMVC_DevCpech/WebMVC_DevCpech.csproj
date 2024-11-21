@@ -163,11 +163,13 @@
     <Compile Include="ContextDB\Personas.cs">
       <DependentUpon>Fichas20.tt</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\CostoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\CentroDeCostoRepository.cs" />
     <Compile Include="Repository\IRepository\IPersonasRepository.cs" />
     <Compile Include="Repository\PersonasRepository.cs" />
   </ItemGroup>
@@ -229,6 +231,7 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="libman.json" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -335,6 +338,10 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Home\EditarNewPage.cshtml" />
     <Content Include="Views\Home\EditarModal.cshtml" />
+    <Content Include="Views\Home\Costo.cshtml" />
+    <Content Include="Views\Costo\EditarCosto.cshtml" />
+    <Content Include="Views\Home\EditarModalC.cshtml" />
+    <Content Include="Views\Costo\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

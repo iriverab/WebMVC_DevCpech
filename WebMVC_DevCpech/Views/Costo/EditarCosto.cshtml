@@ -5,10 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edicion página Centro De Costos</h2>
-
 <div class="container">
-    @using (Html.BeginForm("EditarCosto", "Home", FormMethod.Post))
+    @using (Html.BeginForm("EditarCosto", "costo", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 

@@ -47,7 +47,7 @@ namespace WebMVC_DevCpech.Repository
         {
             try
             {
-                if (model.codigo == "0") 
+                if (model.codigo == 0) 
                     _db.CentroDeCostos.Add(model);
                 else
                 {
@@ -60,7 +60,7 @@ namespace WebMVC_DevCpech.Repository
                 _db.SaveChanges(); 
                 return 1;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return 0;
             }

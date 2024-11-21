@@ -40,8 +40,8 @@
     <Key>
       <PropertyRef Name="codigo" />
     </Key>
-    <Property Name="codigo" Type="char" MaxLength="3" Nullable="false" />
-    <Property Name="descripcion" Type="char" MaxLength="80" />
+    <Property Name="codigo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="descripcion" Type="varchar" MaxLength="100" />
   </EntityType>
   <EntityType Name="Comunas">
     <Key>

@@ -14,7 +14,7 @@ namespace WebMVC_DevCpech.ContextDB
     
     public partial class CentroDeCostos
     {
-        public string codigo { get; set; }
+        public int codigo { get; set; }
         public string descripcion { get; set; }
     }
 }
