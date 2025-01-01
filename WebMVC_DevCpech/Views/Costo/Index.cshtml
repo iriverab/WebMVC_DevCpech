@@ -4,9 +4,71 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Centros de Costos</h2>
+<a href="@Url.Action("EditarCosto", "Costo", new { codigo = 0 })" class="btn btn-success btn-sm pull-right"><i class="fa fa-plus"></i> Agregar</a>
+<br />
 
-@foreach (var item in Model)
-{
-    <p>@item.codigo @item.descripcion <a href="@Url.Action("EditarCosto" , "costo" , new { codigo = item.codigo })">Ir a editar</a></p>
+<!-- Formulario de búsqueda -->
+<form method="get" action="@Url.Action("Buscar", "Costo")" class="form-inline mb-3">
+    <input type="text" name="searchTerm" class="form-control" placeholder="Buscar por código o descripción" />
+    <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.First().codigo)</th>
+            <th>@Html.DisplayNameFor(model => model.First().descripcion)</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr class="elemento">
+                    <td>@item.codigo</td>
+                    <td>@item.descripcion</td>
+                    <td>
+                        <a href="@Url.Action("EditarCosto", "Costo", new { codigo = item.codigo })" class="btn btn-warning">Editar</a>
+                        <button class="btn btn-danger btn-eliminar" data-codigo="@item.codigo">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3" class="text-center">No hay centros de costos disponibles.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.btn-eliminar').click(function () {
+                var $btn = $(this);
+                var codigo = $btn.data('codigo');
+
+                if (confirm("¿Está seguro de que desea eliminar este elemento?")) {
+                    $btn.prop('disabled', true);
+
+                    $.ajax({
+                        url: '@Url.Action("Eliminar", "Costo")',
+                        type: 'POST',
+                        data: { codigo: codigo },
+                        complete: function () {
+                            window.location.href = '@Url.Action("Index", "Costo")';
+                        }
+                    });
+                } else {
+                    $btn.prop('disabled', false);
+                }
+            });
+        });
+    </script>
 }

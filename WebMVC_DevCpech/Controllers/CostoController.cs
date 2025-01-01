@@ -1,60 +1,69 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using WebMVC_DevCpech.ContextDB;
 using WebMVC_DevCpech.Repository;
 
-
 namespace WebMVC_DevCpech.Controllers
 {
     public class CostoController : Controller
     {
-        private CentroDeCostoRepository _centroDeCostoRepo;
+        private readonly CentroDeCostoRepository _centroDeCostoRepo;
 
         public CostoController()
         {
             _centroDeCostoRepo = new CentroDeCostoRepository();
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string tipoBusqueda, string valorBusqueda)
         {
-            var data = _centroDeCostoRepo.getCentroDeCostos();
-            //var dataCC = _centroDeCostoRepo.getCentroCostosAll();
-            return View(data);
+            var centrosDeCostos = _centroDeCostoRepo.BuscarCentroDeCostos(tipoBusqueda, valorBusqueda);
+            return View(centrosDeCostos); // Devuelve solo los resultados filtrados a la vista
         }
 
-        public ActionResult EditarCosto(int Codigo)
+        public ActionResult About()
         {
-            var objCentroDeCostos = _centroDeCostoRepo.getCentroDeCostosById(Codigo);
+            ViewBag.Message = "Your application description page.";
+            return View();
+        }
+
+        public ActionResult Contact()
+        {
+            ViewBag.Message = "Your contact page.";
+            return View();
+        }
+
+        public ActionResult EditarCosto(int codigo)
+        {
+            var objCentroDeCostos = _centroDeCostoRepo.GetCentroDeCostosById(codigo);
             if (objCentroDeCostos == null)
             {
-                objCentroDeCostos = new CentroDeCostos();
-                objCentroDeCostos.codigo = 0;
+                objCentroDeCostos = new CentroDeCostos { codigo = 0 }; // Cambiar a 0 para indicar nuevo registro
             }
-            ViewBag.codigo = new SelectList(_centroDeCostoRepo.getdescripcion(), "Codigo", "Descripcion", objCentroDeCostos.codigo);
+            ViewBag.codigo = new SelectList(_centroDeCostoRepo.GetDescripcion(), "codigo", "descripcion", objCentroDeCostos.codigo);
             return PartialView(objCentroDeCostos);
         }
 
         [HttpPost]
-
         public ActionResult EditarCosto(CentroDeCostos model)
         {
-            var Salida = _centroDeCostoRepo.GrabarCentroDeCostos(model);
-            return RedirectToAction("index", "costo");
+            if (ModelState.IsValid)
+            {
+                _centroDeCostoRepo.GrabarCentroDeCostos(model);
+                return RedirectToAction("Index"); // Redirigir a la lista después de editar
+            }
+            return View(model); // Retornar la vista con el modelo si hay errores
         }
 
         [HttpPost]
-
         public ActionResult EditarModalC(int codigo)
         {
-            var objCentroDeCostos = _centroDeCostoRepo.getCentroDeCostosById(codigo);
+            var objCentroDeCostos = _centroDeCostoRepo.GetCentroDeCostosById(codigo);
             if (objCentroDeCostos == null)
             {
-                objCentroDeCostos = new CentroDeCostos();
-                objCentroDeCostos.codigo = 0;
+                objCentroDeCostos = new CentroDeCostos { codigo = 0 };
             }
-            ViewBag.codigo = new SelectList(_centroDeCostoRepo.getdescripcion(), "descripcion", objCentroDeCostos.descripcion);
+            ViewBag.codigo = new SelectList(_centroDeCostoRepo.GetDescripcion(), "codigo", "descripcion", objCentroDeCostos.codigo);
             return PartialView(objCentroDeCostos);
         }
 
@@ -65,22 +74,54 @@ namespace WebMVC_DevCpech.Controllers
             {
                 if (string.IsNullOrEmpty(model.descripcion))
                     throw new ArgumentException("Debes Ingresar Descripción");
+
                 var salida = _centroDeCostoRepo.GrabarCentroDeCostos(model);
-                if (salida == 1)
-                    return Json("OK");
-                else
-                    return Json("ERROR");
+                return Json(salida == 1 ? new { success = true, message = "Centro de costos guardado exitosamente." } : new { success = false, message = "Error al guardar el centro de costos." });
             }
             catch (Exception ex)
             {
-                return Json("ERROR" + ex.Message);
+                return Json(new { success = false, message = "ERROR: " + ex.Message });
             }
         }
 
-        [HttpPost]
-        public JsonResult Eliminar(int codigo)
+        public ActionResult Eliminar(int codigo)
         {
-            return Json(_centroDeCostoRepo.EliminarBycodigo(codigo));
+            var centroDeCosto = _centroDeCostoRepo.GetCentroDeCostosById(codigo);
+            if (centroDeCosto == null)
+            {
+                return HttpNotFound(); // Devuelve un error 404 si no se encuentra
+            }
+            return View(centroDeCosto); // Devuelve la vista de eliminación con el modelo
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EliminarD(int codigo)
+        {
+            try
+            {
+                var centroDeCosto = _centroDeCostoRepo.GetCentroDeCostosById(codigo);
+                if (centroDeCosto != null)
+                {
+                    _centroDeCostoRepo.EliminarBycodigo(codigo); // Llama al método de eliminación en el repositorio
+                    return RedirectToAction("Index"); // Redirige a la lista después de eliminar
+                }
+                return HttpNotFound(); // Devuelve un error 404 si no se encuentra
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Error al eliminar el centro de costos: " + ex.Message);
+                return View(); // Retorna la vista con el error
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _centroDeCostoRepo.Dispose(); // Asegúrate de que tu repositorio se libere correctamente
+            }
+            base.Dispose(disposing);
         }
     }
 }

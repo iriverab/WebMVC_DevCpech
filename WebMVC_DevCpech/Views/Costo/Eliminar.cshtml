@@ -1,0 +1,52 @@
+﻿@model WebMVC_DevCpech.ContextDB.CentroDeCostos
+@{
+    ViewBag.Title = "Eliminar Centro de Costos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Eliminar Centro de Costos</h2>
+
+<div>
+    <h4>¿Estás seguro de que deseas eliminar este centro de costos?</h4>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.codigo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.codigo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.descripcion)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.descripcion)
+        </dd>
+    </dl>
+</div>
+
+@using (Html.BeginForm("Eliminar", "costo", FormMethod.Post, new { id = "deleteForm" }))
+{
+@Html.HiddenFor(model => model.codigo)
+<div>
+    <input type="submit" value="Eliminar" class="btn btn-danger" id="btnEliminar" />
+    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-default" })
+</div>
+}
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnEliminar').click(function (e) {
+                e.preventDefault(); // Previene el envío del formulario
+
+                // Muestra un cuadro de confirmación
+                var confirmDelete = confirm("¿Estás seguro de que deseas eliminar este centro de costos? Esta acción no se puede deshacer.");
+
+                if (confirmDelete) {
+                    $('#deleteForm').submit();
+                }
+            });
+        });
+    </script>
+}

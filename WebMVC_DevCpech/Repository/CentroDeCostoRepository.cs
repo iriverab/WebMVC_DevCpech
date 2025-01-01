@@ -1,87 +1,118 @@
-﻿using System;
-using System.Collections;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 using WebMVC_DevCpech.ContextDB;
-using WebMVC_DevCpech.Repository.IRepository;
 
 namespace WebMVC_DevCpech.Repository
 {
-    public class CentroDeCostoRepository
+    public class CentroDeCostoRepository : IDisposable
     {
-        private static AlumnosEntities _db;
+        private readonly AlumnosEntities _db; // Contexto de base de datos
+        private bool _disposed = false; // Para detectar llamadas redundantes
+
         public CentroDeCostoRepository()
         {
-            _db = new AlumnosEntities();
+            _db = new AlumnosEntities(); // Inicializa el contexto
         }
-      
-        /// Obtenemos Toda la imformacion de la tabla costos
-    
-        public List<CentroDeCostos> getCentroDeCostos()
+
+        public List<CentroDeCostos> GetCentroDeCostos()
         {
             return _db.CentroDeCostos.ToList();
         }
 
-     
-        /// Obtenemos la descripción por el Codigo 
-   
-        internal CentroDeCostos getCentroDeCostosById(int codigo)
+        public CentroDeCostos GetCentroDeCostosById(int codigo)
         {
             return _db.CentroDeCostos.Find(codigo);
         }
 
-        /// Obtenemos todas las DESCRIPCIONES       
-        internal IEnumerable getdescripcion()
+        public IEnumerable<CentroDeCostos> GetDescripcion()
         {
             return _db.CentroDeCostos.ToList();
         }
 
-        internal IEnumerable getCentroCostosAll()
+        public bool Existe(int codigo)
         {
-            return _db.CentroDeCostos.ToList();
+            return _db.CentroDeCostos.Any(cc => cc.codigo == codigo);
         }
 
-        internal int GrabarCentroDeCostos(CentroDeCostos model)
+        public int GrabarCentroDeCostos(CentroDeCostos model)
         {
             try
             {
-                if (model.codigo == 0) 
-                    _db.CentroDeCostos.Add(model);
-                else
+                if (model.codigo == 0) // Inserción
                 {
-                    // edicion
-                    var obj = _db.CentroDeCostos.Find(model.codigo);
-                    obj.descripcion = model.descripcion;
-                   
-                    _db.Entry(obj).State = EntityState.Modified;
+                    _db.CentroDeCostos.Add(model);
                 }
-                _db.SaveChanges(); 
-                return 1;
+                else // Edición
+                {
+                    var obj = _db.CentroDeCostos.Find(model.codigo);
+                    if (obj != null)
+                    {
+                        obj.descripcion = model.descripcion;
+                        _db.Entry(obj).State = EntityState.Modified;
+                    }
+                }
+                return _db.SaveChanges(); // Guarda los cambios
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return 0;
+                return 0; // Retorna 0 en caso de error
             }
         }
 
-     
-        /// eliminar un registro
-        internal string EliminarBycodigo(int codigo)
+        public bool EliminarBycodigo(int codigo)
         {
-            try
+            var centroCosto = _db.CentroDeCostos.Find(codigo);
+            if (centroCosto == null)
             {
-                var obj = _db.CentroDeCostos.Find(codigo);
-                _db.CentroDeCostos.Remove(obj);
-                _db.SaveChanges();
-                return "OK";
-            }
-            catch (Exception ex)
-            {
-                return "ERROR :" + ex.Message;
+                throw new InvalidOperationException("El código no existe.");
             }
 
+            _db.CentroDeCostos.Remove(centroCosto);
+            return _db.SaveChanges() > 0; // Retorna true si se eliminó correctamente
+        }
+
+        public IEnumerable<CentroDeCostos> BuscarCentroDeCostos(string tipoBusqueda, string valorBusqueda)
+        {
+            IQueryable<CentroDeCostos> query = _db.CentroDeCostos;
+
+            if (!string.IsNullOrEmpty(valorBusqueda))
+            {
+                if (tipoBusqueda == "codigo")
+                {
+                    if (int.TryParse(valorBusqueda, out int codigo))
+                    {
+                        query = query.Where(c => c.codigo == codigo);
+                    }
+                }
+                else if (tipoBusqueda == "descripcion")
+                {
+                    query = query.Where(c => c.descripcion.Contains(valorBusqueda));
+                }
+            }
+
+            return query.ToList(); // Devuelve solo los resultados que coinciden
+        }
+
+        // Implementación de IDisposable
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _db.Dispose(); // Libera los recursos del contexto
+                }
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this); // Suprime la finalización
         }
     }
 }

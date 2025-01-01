@@ -65,3 +65,6 @@ C:\Proyectos\WebMVC_DevCpech\WebMVC_DevCpech\obj\Debug\WebMVC_DevCpech.csproj.Co
 C:\Proyectos\WebMVC_DevCpech\WebMVC_DevCpech\obj\Debug\WebMVC_DevCpech.csproj.CopyComplete
 C:\Proyectos\WebMVC_DevCpech\WebMVC_DevCpech\obj\Debug\WebMVC_DevCpech.dll
 C:\Proyectos\WebMVC_DevCpech\WebMVC_DevCpech\obj\Debug\WebMVC_DevCpech.pdb
+C:\Users\shhob\Source\Repos\WebMVC_DevCpech\WebMVC_DevCpech\obj\Debug\WebMVC_DevCpech.csprojAssemblyReference.cache
+C:\Users\shhob\Source\Repos\WebMVC_DevCpech\WebMVC_DevCpech\obj\Debug\WebMVC_DevCpech.dll
+C:\Users\shhob\Source\Repos\WebMVC_DevCpech\WebMVC_DevCpech\obj\Debug\WebMVC_DevCpech.pdb
