@@ -1,0 +1,36 @@
+﻿@model IEnumerable<WebMVC_DevCpech.ContextDB.CentroDeCostos>
+@{
+    ViewBag.Title = "Resultados de Búsqueda";
+}
+<h3>Resultados de Búsqueda</h3>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.codigo</td>
+                    <td>@item.descripcion</td>
+                    <td>
+                        <a class="btn btn-warning" href="javascript:AbrirModal('@item.codigo')"><i class="fa fa-edit"></i> Ver Información</a>
+                        <a class="btn btn-success" href="@Url.Action("EditarCosto", "Costo", new { codigo = item.codigo })"><i class="fa fa-window-maximize"></i> Modificar</a>
+                        <a class="btn btn-danger" href="javascript:Eliminar('@item.codigo')"><i class="fa fa-remove"></i> Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning">No se encontraron resultados.</div>
+}

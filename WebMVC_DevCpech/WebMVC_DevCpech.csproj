@@ -342,6 +342,7 @@
     <Content Include="Views\Costo\Index.cshtml" />
     <Content Include="Views\Costo\Eliminar.cshtml" />
     <Content Include="Views\Costo\EditarModalC.cshtml" />
+    <Content Include="Views\Costo\Buscar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

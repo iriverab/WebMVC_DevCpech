@@ -60,27 +60,27 @@ namespace WebMVC_DevCpech.Repository
                 _db.SaveChanges(); // Guarda los cambios en la base de datos
             }
         }
-
-        public IEnumerable<CentroDeCostos> BuscarCentroDeCostos(string tipoBusqueda, string valorBusqueda)
+        // Método para buscar centros de costos
+        public IEnumerable<CentroDeCostos> BuscarCentroDeCostos(string tipoBusqueda, string searchTerm)
         {
-            IQueryable<CentroDeCostos> query = _db.CentroDeCostos;
-
-            if (!string.IsNullOrEmpty(valorBusqueda))
+            if (string.IsNullOrEmpty(searchTerm))
             {
-                if (tipoBusqueda == "codigo")
-                {
-                    if (int.TryParse(valorBusqueda, out int codigo))
-                    {
-                        query = query.Where(c => c.codigo == codigo); // Filtra por código
-                    }
-                }
-                else if (tipoBusqueda == "descripcion")
-                {
-                    query = query.Where(c => c.descripcion.Contains(valorBusqueda)); // Filtra por descripción
-                }
+                return new List<CentroDeCostos>(); // Retorna una lista vacía si no hay término de búsqueda
             }
 
-            return query.ToList(); // Devuelve solo los resultados que coinciden
+            switch (tipoBusqueda)
+            {
+                case "codigo":
+                    return _context.CentroDeCostos
+                        .Where(c => c.codigo.Contains(searchTerm))
+                        .ToList(); // Filtra por código
+                case "descripcion":
+                    return _context.CentroDeCostos
+                        .Where(c => c.descripcion.Contains(searchTerm))
+                        .ToList(); // Filtra por descripción
+                default:
+                    return new List<CentroDeCostos>(); // Retorna una lista vacía si el tipo de búsqueda no es válido
+            }
         }
 
         public List<int> ObtenerCodigosExistentes()

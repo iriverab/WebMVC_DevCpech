@@ -13,13 +13,20 @@ namespace WebMVC_DevCpech.Controllers
         {
             _centroDeCostoRepo = new CentroDeCostoRepository(); // Inicializa el repositorio
         }
-
-        // Método para mostrar todos los centros de costos
-        public ActionResult Index(string tipoBusqueda = null, string searchTerm = null)
+        // Método para mostrar la vista inicial
+        public ActionResult Index()
         {
-            var centrosDeCostos = _centroDeCostoRepo.BuscarCentroDeCostos(tipoBusqueda, searchTerm); // Realiza la búsqueda si hay parámetros
-            return View(centrosDeCostos); // Devuelve la vista con los centros de costos
+            return View(); // Devuelve la vista inicial
         }
+
+        // Método para buscar centros de costos
+        public ActionResult Buscar(string tipoBusqueda, string searchTerm)
+        {
+            var resultados = _centroDeCostoRepo.BuscarCentroDeCostos(tipoBusqueda, searchTerm);
+            return View("Buscar", resultados); // Retorna la vista de resultados
+        }
+
+
 
         // Método para editar o crear un centro de costo
         public ActionResult EditarCosto(int codigo)
