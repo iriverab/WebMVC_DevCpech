@@ -338,9 +338,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Home\EditarNewPage.cshtml" />
     <Content Include="Views\Home\EditarModal.cshtml" />
-    <Content Include="Views\Home\Costo.cshtml" />
     <Content Include="Views\Costo\EditarCosto.cshtml" />
-    <Content Include="Views\Home\EditarModalC.cshtml" />
     <Content Include="Views\Costo\Index.cshtml" />
     <Content Include="Views\Costo\Eliminar.cshtml" />
     <Content Include="Views\Costo\EditarModalC.cshtml" />

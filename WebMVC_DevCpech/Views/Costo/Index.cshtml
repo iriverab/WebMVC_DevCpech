@@ -1,74 +1,100 @@
 ﻿@model IEnumerable<WebMVC_DevCpech.ContextDB.CentroDeCostos>
 @{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Listado";
 }
-
-<h2>Centros de Costos</h2>
-<a href="@Url.Action("EditarCosto", "Costo", new { codigo = 0 })" class="btn btn-success btn-sm pull-right"><i class="fa fa-plus"></i> Agregar</a>
-<br />
-
-<!-- Formulario de búsqueda -->
-<form method="get" action="@Url.Action("Buscar", "Costo")" class="form-inline mb-3">
-    <input type="text" name="searchTerm" class="form-control" placeholder="Buscar por código o descripción" />
-    <button type="submit" class="btn btn-primary">Buscar</button>
-</form>
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.First().codigo)</th>
-            <th>@Html.DisplayNameFor(model => model.First().descripcion)</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.Any())
-        {
-            foreach (var item in Model)
-            {
-                <tr class="elemento">
-                    <td>@item.codigo</td>
-                    <td>@item.descripcion</td>
-                    <td>
-                        <a href="@Url.Action("EditarCosto", "Costo", new { codigo = item.codigo })" class="btn btn-warning">Editar</a>
-                        <button class="btn btn-danger btn-eliminar" data-codigo="@item.codigo">Eliminar</button>
-                    </td>
+<h3>Listado</h3>
+<div class="clearfix">
+    <a href="@Url.Action("EditarCosto", "Costo", new { codigo = 0 })" class="btn btn-success btn-sm pull-right"><i class="fa fa-plus"></i> Agregar</a>
+</div>
+<div class="container">
+    @if (Model.Any())
+    {
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
                 </tr>
-            }
-        }
-        else
-        {
-            <tr>
-                <td colspan="3" class="text-center">No hay centros de costos disponibles.</td>
-            </tr>
-        }
-    </tbody>
-</table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {<tr id="@item.codigo">
+                <td>@item.codigo</td>
+                <td>@item.descripcion</td>
+                <td style="white-space: nowrap; width: 1%;">
+                    <input type="hidden" id="Descripcion@item.codigo" value="@item.descripcion" />
+                    <input type="hidden" id="Nombre_@item.codigo" value="@(string.Format("{0} {1}", item.codigo, item.descripcion))" />
+                    <a class="btn btn-warning" href="javascript:AbrirModal('@item.codigo')"><i class="fa fa-edit"></i> Ver Información</a>
+                    <a class="btn btn-success" href="@Url.Action("EditarCosto", "costo", new { codigo = item.codigo })"><i class="fa fa-window-maximize"></i> Modificar</a>
+                    <a class="btn btn-danger" href="javascript:Eliminar('@item.codigo')"><i class="fa fa-remove"></i> Delete</a>
+                </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-success">
+            <p>No se encontró información</p>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="Modal_xl" tabindex="-1" role="dialog" aria-labelledby="Ejemplo" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content" style="height:auto">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Información De Centro de costo</h5>
+                <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="max-height: calc(100vh - 250px); overflow-y: auto;">
+                <div id="Content_Modal_xl"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('.btn-eliminar').click(function () {
-                var $btn = $(this);
-                var codigo = $btn.data('codigo');
-
-                if (confirm("¿Está seguro de que desea eliminar este elemento?")) {
-                    $btn.prop('disabled', true);
-
-                    $.ajax({
-                        url: '@Url.Action("Eliminar", "Costo")',
-                        type: 'POST',
-                        data: { codigo: codigo },
-                        complete: function () {
-                            window.location.href = '@Url.Action("Index", "Costo")';
-                        }
-                    });
-                } else {
-                    $btn.prop('disabled', false);
+        function AbrirModal(codigo) {
+            var json = { codigo };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("EditarModalC")',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(json),
+                success: function (data) {
+                    $("#Content_Modal_xl").html(data);
+                    $("#Modal_xl").modal({});
                 }
             });
-        });
+        }
+
+        function Eliminar(codigo) {
+            var descripcion = $("#Descripcion" + codigo).val(); 
+            if (confirm("¿Está seguro de eliminar?")) {
+                var json = { codigo };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Eliminar", "Costo")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        if (data == "OK") {
+                            alert("Registro Eliminado Con exito");
+                            location.href = '@Url.Action("index", "Costo")';
+                        } else {
+                            alert("Error al eliminar registro" + data);
+                        }
+                    }
+                });
+            } else {
+                alert("Accion de eliminar Cancelada");
+            }
+        }
     </script>
 }

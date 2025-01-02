@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -19,59 +18,47 @@ namespace WebMVC_DevCpech.Repository
 
         public List<CentroDeCostos> GetCentroDeCostos()
         {
-            return _db.CentroDeCostos.ToList();
+            return _db.CentroDeCostos.ToList(); // Devuelve todos los centros de costos
         }
 
         public CentroDeCostos GetCentroDeCostosById(int codigo)
         {
-            return _db.CentroDeCostos.Find(codigo);
-        }
-
-        public IEnumerable<CentroDeCostos> GetDescripcion()
-        {
-            return _db.CentroDeCostos.ToList();
+            return _db.CentroDeCostos.Find(codigo); // Busca un centro de costo por su código
         }
 
         public bool Existe(int codigo)
         {
-            return _db.CentroDeCostos.Any(cc => cc.codigo == codigo);
+            return _db.CentroDeCostos.Any(cc => cc.codigo == codigo); // Verifica si existe un centro de costo
         }
 
         public int GrabarCentroDeCostos(CentroDeCostos model)
         {
-            try
+            if (model.codigo == 0) // Verifica si el código es 0, lo que indica que es un nuevo registro
             {
-                if (model.codigo == 0) // Inserción
-                {
-                    _db.CentroDeCostos.Add(model);
-                }
-                else // Edición
-                {
-                    var obj = _db.CentroDeCostos.Find(model.codigo);
-                    if (obj != null)
-                    {
-                        obj.descripcion = model.descripcion;
-                        _db.Entry(obj).State = EntityState.Modified;
-                    }
-                }
-                return _db.SaveChanges(); // Guarda los cambios
+                model.codigo = ObtenerNuevoCodigo(); // Asigna un nuevo código disponible
             }
-            catch (Exception)
+
+            // Lógica para guardar el centro de costos en la base de datos
+            if (model.codigo == 0) // Si es un nuevo registro
             {
-                return 0; // Retorna 0 en caso de error
+                _db.CentroDeCostos.Add(model);
             }
+            else // Si es una actualización
+            {
+                _db.Entry(model).State = EntityState.Modified;
+            }
+
+            return _db.SaveChanges(); // Guarda los cambios en la base de datos
         }
 
-        public bool EliminarBycodigo(int codigo)
+        public void EliminarCentroDeCostos(int codigo)
         {
-            var centroCosto = _db.CentroDeCostos.Find(codigo);
-            if (centroCosto == null)
+            var centroDeCosto = _db.CentroDeCostos.Find(codigo);
+            if (centroDeCosto != null)
             {
-                throw new InvalidOperationException("El código no existe.");
+                _db.CentroDeCostos.Remove(centroDeCosto); // Elimina el centro de costo
+                _db.SaveChanges(); // Guarda los cambios en la base de datos
             }
-
-            _db.CentroDeCostos.Remove(centroCosto);
-            return _db.SaveChanges() > 0; // Retorna true si se eliminó correctamente
         }
 
         public IEnumerable<CentroDeCostos> BuscarCentroDeCostos(string tipoBusqueda, string valorBusqueda)
@@ -84,35 +71,53 @@ namespace WebMVC_DevCpech.Repository
                 {
                     if (int.TryParse(valorBusqueda, out int codigo))
                     {
-                        query = query.Where(c => c.codigo == codigo);
+                        query = query.Where(c => c.codigo == codigo); // Filtra por código
                     }
                 }
                 else if (tipoBusqueda == "descripcion")
                 {
-                    query = query.Where(c => c.descripcion.Contains(valorBusqueda));
+                    query = query.Where(c => c.descripcion.Contains(valorBusqueda)); // Filtra por descripción
                 }
             }
 
             return query.ToList(); // Devuelve solo los resultados que coinciden
         }
 
-        // Implementación de IDisposable
+        public List<int> ObtenerCodigosExistentes()
+        {
+            return _db.CentroDeCostos.Select(c => c.codigo).ToList(); // Devuelve todos los códigos existentes
+        }
+
+        private int ObtenerNuevoCodigo()
+        {
+            var codigosExistentes = ObtenerCodigosExistentes();
+            int nuevoCodigo = 0;
+
+            // Busca el primer código disponible
+            while (codigosExistentes.Contains(nuevoCodigo))
+            {
+                nuevoCodigo++;
+            }
+
+            return nuevoCodigo;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
             {
                 if (disposing)
                 {
-                    _db.Dispose(); // Libera los recursos del contexto
+                    _db.Dispose(); // Libera el contexto de la base de datos
                 }
             }
             _disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this); // Suprime la finalización
         }
     }
 }
