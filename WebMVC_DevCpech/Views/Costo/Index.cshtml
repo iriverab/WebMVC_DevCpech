@@ -2,20 +2,22 @@
 @{
     ViewBag.Title = "Listado";
 }
-<h3>Listado</h3>
+<h3 class="text-center">Listado de Centros de Costo</h3>
 
-<div class="container">
-    <h3>Buscar Centro de Costo</h3>
-    <div class="form-group">
-        <label for="tipoBusqueda">Tipo de Búsqueda:</label>
-        <select id="tipoBusqueda" class="form-control">
-            <option value="codigo">Código</option>
-            <option value="descripcion">Descripción</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="searchTerm">Consulta:</label>
-        <input type="text" id="searchTerm" class="form-control" placeholder="Ingrese su búsqueda">
+<div class="container mt-4">
+    <h4>Buscar Centro de Costo</h4>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="tipoBusqueda">Tipo de Búsqueda:</label>
+            <select id="tipoBusqueda" class="form-control">
+                <option value="codigo">Código</option>
+                <option value="descripcion">Descripción</option>
+            </select>
+        </div>
+        <div class="col-md-8">
+            <label for="searchTerm">Consulta:</label>
+            <input type="text" id="searchTerm" class="form-control" placeholder="Ingrese su búsqueda">
+        </div>
     </div>
     <button id="btnBuscar" class="btn btn-primary">Buscar</button>
 </div>
@@ -24,11 +26,11 @@
     <a href="@Url.Action("EditarCosto", "Costo", new { codigo = 0 })" class="btn btn-success btn-sm pull-right"><i class="fa fa-plus"></i> Agregar</a>
 </div>
 
-<div class="container">
+<div class="container mt-4">
     @if (Model.Any())
     {
-        <table class="table table-hover">
-            <thead>
+        <table class="table table-hover table-striped">
+            <thead class="thead-dark">
                 <tr>
                     <th>Código</th>
                     <th>Descripción</th>
@@ -44,9 +46,9 @@
                         <td style="white-space: nowrap; width: 1%;">
                             <input type="hidden" id="Descripcion@item.codigo" value="@item.descripcion" />
                             <input type="hidden" id="Nombre_@item.codigo" value="@(string.Format("{0} {1}", item.codigo, item.descripcion))" />
-                            <a class="btn btn-warning" href="javascript:AbrirModal('@item.codigo')"><i class="fa fa-edit"></i> Ver Información</a>
-                            <a class="btn btn-success" href="@Url.Action("EditarCosto", "costo", new { codigo = item.codigo })"><i class="fa fa-window-maximize"></i> Modificar</a>
-                            <a class="btn btn-danger" href="javascript:Eliminar('@item.codigo')"><i class="fa fa-remove"></i> Delete</a>
+                            <a class="btn btn-warning btn-sm" href="javascript:AbrirModal('@item.codigo')"><i class="fa fa-eye"></i> Ver Información</a>
+                            <a class="btn btn-success btn-sm" href="@Url.Action("EditarCosto", "costo", new { codigo = item.codigo })"><i class="fa fa-edit"></i> Modificar</a>
+                            <a class="btn btn-danger btn-sm" href="javascript:Eliminar('@item.codigo')"><i class="fa fa-trash"></i> Eliminar</a>
                         </td>
                     </tr>
                 }
@@ -55,7 +57,7 @@
     }
     else
     {
-        <div class="alert alert-success">
+        <div class="alert alert-warning">
             <p>No se encontró información</p>
         </div>
     }
@@ -92,40 +94,30 @@
                     var codigo = $(this).find("td:first").text();
                     var descripcion = $(this).find("td:nth-child(2)").text();
                     if ((tipoBusqueda === "codigo" && codigo.includes(searchTerm)) ||
-                        (tipoBusqueda === "descripcion" && descripcion.includes(searchTerm))) {
-                        $(this).show(); // Muestra la fila que coincide
+                        ( tipoBusqueda === "descripcion" && descripcion.includes(searchTerm))) {
+                        $(this).show();
                     } else {
-                        $(this).hide(); // Oc ulta la fila que no coincide
+                        $(this).hide();
                     }
                 });
             });
-
-            function AbrirModal(codigo) {
-                var descripcion = $("#Descripcion" + codigo).val();
-                $("#modalBody").text(descripcion); // Llenar el modal con la información
-                $("#myModal").modal('show'); // Mostrar el modal
-            }
-
-            function Eliminar(codigo) {
-                var descripcion = $("#Descripcion" + codigo).val();
-                if (confirm("¿Está seguro de eliminar?")) {
-                    var json = { codigo };
-                    $.ajax({
-                        type: "POST",
-                        url: '@Url.Action("Eliminar", "Costo")',
-                        contentType: "application/json; charset=utf-8",
-                        data: JSON.stringify(json),
-                        success: function (data) {
-                            if (data == "OK") {
-                                alert("Registro Eliminado Con éxito");
-                                location.href = '@Url.Action("index", "Costo")';
-                            } else {
-                                alert("Error al eliminar registro" + data);
-                            }
-                        }
-                    });
-                }
-            }
         });
+
+        function AbrirModal(codigo) {
+            var json = { codigo };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("EditarModalC", "Costo")',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(json),
+                success: function (data) {
+                    $("#modalBody").html(data);
+                    $("#myModal").modal('show');
+                },
+                error: function (xhr, status, error) {
+                    alert("Error al cargar la información: " + error);
+                }
+            });
+        }
     </script>
 }

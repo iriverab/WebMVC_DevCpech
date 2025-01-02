@@ -26,7 +26,16 @@ namespace WebMVC_DevCpech.Controllers
             return View("Buscar", resultados); // Retorna la vista de resultados
         }
 
+        public ActionResult EditarModalC(int codigo)
+        {
+            var centroDeCosto = _centroDeCostoRepo.GetCentroDeCostosById(codigo);
+            if (centroDeCosto == null)
+            {
+                return HttpNotFound();
+            }
 
+            return PartialView("_CentroDeCostoModal", centroDeCosto);
+        }
 
         // Método para editar o crear un centro de costo
         public ActionResult EditarCosto(int codigo)
