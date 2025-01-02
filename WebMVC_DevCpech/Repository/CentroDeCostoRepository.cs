@@ -36,16 +36,24 @@ namespace WebMVC_DevCpech.Repository
             if (model.codigo == 0) // Verifica si el código es 0, lo que indica que es un nuevo registro
             {
                 model.codigo = ObtenerNuevoCodigo(); // Asigna un nuevo código disponible
-            }
-
-            // Lógica para guardar el centro de costos en la base de datos
-            if (model.codigo == 0) // Si es un nuevo registro
-            {
-                _db.CentroDeCostos.Add(model);
+                _db.CentroDeCostos.Add(model); // Agrega el nuevo centro de costo
             }
             else // Si es una actualización
             {
-                _db.Entry(model).State = EntityState.Modified;
+                var existingCentroDeCosto = _db.CentroDeCostos.Find(model.codigo);
+                if (existingCentroDeCosto != null)
+                {
+                    // Actualiza los campos necesarios
+                    existingCentroDeCosto.descripcion = model.descripcion;
+                    // Aquí puedes agregar otros campos que necesiten ser actualizados
+                    _db.Entry(existingCentroDeCosto).State = EntityState.Modified; // Marca el objeto como modificado
+                }
+                else
+                {
+                    // Si el código no existe, puedes decidir cómo manejarlo
+                    // Por ejemplo, lanzar una excepción o agregar un nuevo registro
+                    _db.CentroDeCostos.Add(model); // Agrega el nuevo centro de costo si no existe
+                }
             }
 
             return _db.SaveChanges(); // Guarda los cambios en la base de datos
@@ -60,6 +68,7 @@ namespace WebMVC_DevCpech.Repository
                 _db.SaveChanges(); // Guarda los cambios en la base de datos
             }
         }
+
         // Método para buscar centros de costos
         public IEnumerable<CentroDeCostos> BuscarCentroDeCostos(string tipoBusqueda, string searchTerm)
         {
@@ -71,11 +80,11 @@ namespace WebMVC_DevCpech.Repository
             switch (tipoBusqueda)
             {
                 case "codigo":
-                    return _context.CentroDeCostos
-                        .Where(c => c.codigo.Contains(searchTerm))
+                    return _db.CentroDeCostos
+                        .Where(c => c.codigo.ToString().Contains(searchTerm))
                         .ToList(); // Filtra por código
                 case "descripcion":
-                    return _context.CentroDeCostos
+                    return _db.CentroDeCostos
                         .Where(c => c.descripcion.Contains(searchTerm))
                         .ToList(); // Filtra por descripción
                 default:

@@ -1,65 +1,39 @@
 ﻿@model WebMVC_DevCpech.ContextDB.CentroDeCostos
 
 @{
-    ViewBag.Title = "EditarCosto";
+    ViewBag.Title = "Editar Costo";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container">
-    @using (Html.BeginForm("EditarCosto", "costo", FormMethod.Post))
+    @using (Html.BeginForm("EditarCosto", "Costo", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <H4>Centro de Costos</H4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.codigo)
+        <div class="form-horizontal">
+            <h4>Centro de Costos</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.codigo)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.descripcion, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="form-group">
+                @Html.LabelFor(model => model.descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.descripcion, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                    @Html.ValidationMessageFor(model => model.descripcion, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Grabar" class="btn btn-success" />
-                @Html.ActionLink("Volver", "Index", null, new { @class = "btn btn-danger" })
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Grabar" class="btn btn-success" />
+                    @Html.ActionLink("Volver", "Index", null, new { @class = "btn btn-danger" })
+                </div>
             </div>
-        </div>
-
-
-
-        <script>
-    function Editar(codigo) {
-        var codigo = $("#codigo").val();
-        var descripcion = $("#descripcion").val();
-        //Podriamos validar valores aca (Variable = "" entonces alert return false)!!! o en el controlador -- lo haremos en controlador
-        var json = { codigo : codigo, descripcion };
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("EditarDesdeModalC")',
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(json),
-            success: function (data) {
-                if (data == "OK") {
-                    alert("Grabación realizada correctamente!");
-                    //$('#Modal_xl').modal('hide'); //ocultamos modal
-                    location.href = '@Url.Action("index" , "costo")';
-                }
-                else
-                    alert("error" + data);
-            }
-        });
-
+        </div> <!-- form-horizontal -->
     }
-        </script>
-
-    </div> ///horizoltal
-
-     }
-
 </div>
 
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

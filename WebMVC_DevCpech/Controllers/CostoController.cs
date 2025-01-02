@@ -13,6 +13,7 @@ namespace WebMVC_DevCpech.Controllers
         {
             _centroDeCostoRepo = new CentroDeCostoRepository(); // Inicializa el repositorio
         }
+
         // Método para mostrar la vista inicial
         public ActionResult Index()
         {
@@ -24,17 +25,6 @@ namespace WebMVC_DevCpech.Controllers
         {
             var resultados = _centroDeCostoRepo.BuscarCentroDeCostos(tipoBusqueda, searchTerm);
             return View("Buscar", resultados); // Retorna la vista de resultados
-        }
-
-        public ActionResult EditarModalC(int codigo)
-        {
-            var centroDeCosto = _centroDeCostoRepo.GetCentroDeCostosById(codigo);
-            if (centroDeCosto == null)
-            {
-                return HttpNotFound();
-            }
-
-            return PartialView("_CentroDeCostoModal", centroDeCosto);
         }
 
         // Método para editar o crear un centro de costo
@@ -49,8 +39,39 @@ namespace WebMVC_DevCpech.Controllers
                 objCentroDeCostos.codigo = ObtenerNuevoCodigo(); // Llama al método para obtener un nuevo código
             }
 
-            ViewBag.codigo = new SelectList(_centroDeCostoRepo.GetCentroDeCostos(), "codigo", "descripcion", objCentroDeCostos.codigo);
-            return PartialView(objCentroDeCostos); // Devuelve la vista parcial para editar
+            return View(objCentroDeCostos); // Devuelve la vista para editar
+        }
+
+        // Método para guardar el centro de costo
+        [HttpPost]
+        [ValidateAntiForgeryToken] // Asegúrate de incluir esta línea para la protección CSRF
+        public ActionResult EditarCosto(CentroDeCostos model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Si el código ya existe, actualiza el registro
+                if (_centroDeCostoRepo.Existe(model.codigo))
+                {
+                    _centroDeCostoRepo.GrabarCentroDeCostos(model);
+                }
+                else
+                {
+                    // Si no existe, puedes decidir si quieres permitir la creación
+                    // o mostrar un error. Aquí se permite la creación.
+                    _centroDeCostoRepo.GrabarCentroDeCostos(model);
+                }
+
+                return RedirectToAction("Index"); // Redirige a la lista de centros de costos
+            }
+            // Si hay errores, vuelve a mostrar la vista de edición con el modelo
+            return View(model); // Asegúrate de que la vista se llame correctamente
+        }
+
+        // Método para eliminar un centro de costo
+        public ActionResult EliminarCosto(int codigo)
+        {
+            _centroDeCostoRepo.EliminarCentroDeCostos(codigo);
+            return RedirectToAction("Index"); // Redirige a la lista de centros de costos
         }
 
         private int ObtenerNuevoCodigo()
@@ -65,28 +86,6 @@ namespace WebMVC_DevCpech.Controllers
             }
 
             return nuevoCodigo;
-        }
-
-        // Método para guardar el centro de costo
-        [HttpPost]
-        public ActionResult GuardarCentroDeCosto(CentroDeCostos model)
-        {
-            if (ModelState.IsValid)
-            {
-                int resultado = _centroDeCostoRepo.GrabarCentroDeCostos(model);
-                if (resultado > 0)
-                {
-                    return RedirectToAction("Index"); // Redirige a la lista de centros de costos
-                }
-            }
-            return View(model); // Devuelve la vista con el modelo si hay errores
-        }
-
-        // Método para eliminar un centro de costo
-        public ActionResult EliminarCosto(int codigo)
-        {
-            _centroDeCostoRepo.EliminarCentroDeCostos(codigo);
-            return RedirectToAction("Index"); // Redirige a la lista de centros de costos
         }
 
         protected override void Dispose(bool disposing)

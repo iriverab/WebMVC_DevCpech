@@ -94,10 +94,10 @@
                     var codigo = $(this).find("td:first").text();
                     var descripcion = $(this).find("td:nth-child(2)").text();
                     if ((tipoBusqueda === "codigo" && codigo.includes(searchTerm)) ||
-                        ( tipoBusqueda === "descripcion" && descripcion.includes(searchTerm))) {
+                        (tipoBusqueda === "descripcion" && descripcion.includes(searchTerm))) {
                         $(this).show();
                     } else {
-                        $(this).hide();
+                        $( this).hide();
                     }
                 });
             });
@@ -118,6 +118,30 @@
                     alert("Error al cargar la información: " + error);
                 }
             });
+        }
+
+        function Eliminar(codigo) {
+            var descripcion = $("#Descripcion" + codigo).val();
+            if (confirm("¿Está seguro de eliminar?")) {
+                var json = { codigo };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Eliminar", "Costo")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        if (data == "OK") {
+                            alert("Registro Eliminado Con éxito");
+                            location.href = '@Url.Action("index", "Costo")';
+                        } else {
+                            alert("Error al eliminar registro: " + data);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error al eliminar registro: " + error);
+                    }
+                });
+            }
         }
     </script>
 }
