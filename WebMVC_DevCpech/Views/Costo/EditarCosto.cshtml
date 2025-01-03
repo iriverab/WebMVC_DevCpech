@@ -6,7 +6,7 @@
 }
 
 <div class="container">
-    @using (Html.BeginForm("EditarCosto", "Costo", FormMethod.Post))
+    @using (Html.BeginForm("EditarCosto", "Costo", FormMethod.Post, new { id = "editarCostoForm" }))
     {
         @Html.AntiForgeryToken()
 
@@ -19,7 +19,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.descripcion, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                    @Html.EditorFor(model => model.descripcion, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.descripcion, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -36,4 +36,36 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $('#editarCostoForm').submit(function (event) {
+                var descripcion = $('#descripcion').val();
+                var isValid = true;
+                var errorMessage = '';
+
+                // Validar que no esté vacío
+                if (descripcion.trim() === '') {
+                    isValid = false;
+                    errorMessage += 'El campo no puede estar vacío.\n';
+                }
+
+                // Validar longitud mínima
+                if (descripcion.length < 3) {
+                    isValid = false;
+                    errorMessage += 'La descripción debe tener al menos 3 caracteres.\n';
+                }
+
+                // Validar que contenga al menos una mayúscula
+                if (!/[A-Z]/.test(descripcion)) {
+                    isValid = false;
+                    errorMessage += 'La descripción debe contener al menos una letra mayúscula.\n';
+                }
+
+                if (!isValid) {
+                    event.preventDefault(); // Evitar el envío del formulario
+                    alert(errorMessage); // Mostrar mensaje de error
+                }
+            });
+        });
+    </script>
 }
